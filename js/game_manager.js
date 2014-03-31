@@ -72,7 +72,7 @@ GameManager.prototype.addStartTiles = function () {
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
-    var value = Math.random() < 0.9 ? 2 : 4;
+    var value = Math.random() < 0.9 ? "鼠" : "牛";
     var tile = new Tile(this.grid.randomAvailableCell(), value);
 
     this.grid.insertTile(tile);
@@ -158,7 +158,17 @@ GameManager.prototype.move = function (direction) {
 
         // Only one merger per row traversal?
         if (next && next.value === tile.value && !next.mergedFrom) {
-          var merged = new Tile(positions.next, tile.value * 2);
+          if (tile.value=="鼠") var merged = new Tile(positions.next, "牛");
+          if (tile.value=="牛") var merged = new Tile(positions.next, "虎");
+          if (tile.value=="虎") var merged = new Tile(positions.next, "兔");
+          if (tile.value=="兔") var merged = new Tile(positions.next, "龙");
+          if (tile.value=="龙") var merged = new Tile(positions.next, "蛇");
+          if (tile.value=="蛇") var merged = new Tile(positions.next, "马");
+          if (tile.value=="马") var merged = new Tile(positions.next, "羊");
+          if (tile.value=="羊") var merged = new Tile(positions.next, "猴");
+          if (tile.value=="猴") var merged = new Tile(positions.next, "鸡");
+          if (tile.value=="鸡") var merged = new Tile(positions.next, "狗");
+          if (tile.value=="狗") var merged = new Tile(positions.next, "猪");
           merged.mergedFrom = [tile, next];
 
           self.grid.insertTile(merged);
@@ -168,10 +178,21 @@ GameManager.prototype.move = function (direction) {
           tile.updatePosition(positions.next);
 
           // Update the score
-          self.score += merged.value;
+          //self.score += merged.value;
+          if (tile.value=="牛") self.score += 2;
+          if (tile.value=="虎") self.score += 4;
+          if (tile.value=="兔") self.score += 8;
+          if (tile.value=="龙") self.score += 16;
+          if (tile.value=="蛇") self.score += 32;
+          if (tile.value=="马") self.score += 64;
+          if (tile.value=="羊") self.score += 128;
+          if (tile.value=="猴") self.score += 256;
+          if (tile.value=="鸡") self.score += 512;
+          if (tile.value=="狗") self.score += 1024;
+          if (tile.value=="猪") self.score += 1024;
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          if (merged.value === "猪") self.won = true;
         } else {
           self.moveTile(tile, positions.farthest);
         }
